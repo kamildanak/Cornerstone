@@ -1,4 +1,4 @@
-package com.kamildanak.minecraft.realestate.events;
+package com.kamildanak.minecraft.cornerstone.events;
 
 import com.kamildanak.minecraft.enderpay.economy.Account;
 import net.minecraftforge.event.entity.player.PlayerEvent;

@@ -1,4 +1,4 @@
-package com.kamildanak.minecraft.realestate.settings;
+package com.kamildanak.minecraft.cornerstone.settings;
 
 public interface ISettings {
     int getChunkClusterSize();

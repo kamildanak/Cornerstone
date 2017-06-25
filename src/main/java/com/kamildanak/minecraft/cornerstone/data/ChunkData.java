@@ -1,6 +1,6 @@
-package com.kamildanak.minecraft.realestate.data;
+package com.kamildanak.minecraft.cornerstone.data;
 
-import com.kamildanak.minecraft.realestate.RealEstate;
+import com.kamildanak.minecraft.cornerstone.Cornerstone;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static com.kamildanak.minecraft.realestate.Utils.getWorldDir;
+import static com.kamildanak.minecraft.cornerstone.Utils.getWorldDir;
 
 public class ChunkData {
     private static HashMap<Point2i, ChunkData> objects = new HashMap<>();
@@ -56,8 +56,8 @@ public class ChunkData {
 
     @Nonnull
     private static Point2i getChunkClusterPoint2i(@Nonnull BlockPos blockPos) {
-        int x = (int) Math.floor(blockPos.getX() / ((float) (16 * RealEstate.settings.getChunkClusterSize())));
-        int y = (int) Math.floor(blockPos.getY() / ((float) (16 * RealEstate.settings.getChunkClusterSize())));
+        int x = (int) Math.floor(blockPos.getX() / ((float) (16 * Cornerstone.settings.getChunkClusterSize())));
+        int y = (int) Math.floor(blockPos.getY() / ((float) (16 * Cornerstone.settings.getChunkClusterSize())));
         return new Point2i(x, y);
     }
 
@@ -71,7 +71,7 @@ public class ChunkData {
 
     private File getFile() {
         File dimLocation = new File(location, saveFolder);
-        File saveLocation = new File(dimLocation, RealEstate.saveLocation);
+        File saveLocation = new File(dimLocation, Cornerstone.saveLocation);
         return new File(saveLocation, String.format("chunk_cluster-%d_%d.json",
                 chunkClusterPosition.getX(), chunkClusterPosition.getY()));
     }

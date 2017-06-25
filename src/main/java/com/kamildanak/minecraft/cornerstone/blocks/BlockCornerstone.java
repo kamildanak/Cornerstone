@@ -1,4 +1,4 @@
-package com.kamildanak.minecraft.realestate.blocks;
+package com.kamildanak.minecraft.cornerstone.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

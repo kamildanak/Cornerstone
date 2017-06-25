@@ -3,8 +3,8 @@ def majorModVersion   = "0"
 def apiModVersion     = "0"
 def minorModVersion   = "1"
 def patchVersion = "0"
-def modID = "realestate"
-def modName = "RealEstate"
+def modID = "cornerstone"
+def modName = "Cornerstone"
 version = mcVersion+"-"+majorModVersion+"."+apiModVersion+"."+minorModVersion+"."+patchVersion
 
 buildscript {
@@ -18,7 +18,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-group = "com.kamildanak.minecraft.realestate" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "com.kamildanak.minecraft.cornerstone" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = modID
 
 targetCompatibility = "1.8"

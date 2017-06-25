@@ -1,10 +1,10 @@
 {
   "variants": {
     "normal": {
-      "model": "RealEstate:cornerstone"
+      "model": "Cornerstone:cornerstone"
     },
     "inventory": {
-      "model": "RealEstate:cornerstone"
+      "model": "Cornerstone:cornerstone"
     }
   }
 }

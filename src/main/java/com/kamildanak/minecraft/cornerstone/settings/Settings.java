@@ -1,4 +1,4 @@
-package com.kamildanak.minecraft.realestate.settings;
+package com.kamildanak.minecraft.cornerstone.settings;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;

@@ -1,4 +1,4 @@
-package com.kamildanak.minecraft.realestate;
+package com.kamildanak.minecraft.cornerstone;
 
 import net.minecraft.world.World;
 import net.minecraft.world.storage.ISaveHandler;

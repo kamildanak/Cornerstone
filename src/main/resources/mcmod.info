@@ -2,11 +2,11 @@
 {
   "modid": "${modID}",
   "name": "${modName}",
-  "description": "Adds Real Estate to your Forge server.",
+  "description": "Allows you to claim land and pay for it with Enderpay.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "logoFile": "assets/${modID}/icon.png",
-  "url": "https://github.com/kamildanak/RealEstate",
+  "url": "https://github.com/kamildanak/Cornerstone",
   "authorList": ["kamildanak"],
   "screenshots": []
 }
