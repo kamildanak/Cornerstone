@@ -1,0 +1,13 @@
+[
+{
+  "modid": "${modID}",
+  "name": "${modName}",
+  "description": "Adds Real Estate to your Forge server.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "logoFile": "assets/${modID}/icon.png",
+  "url": "https://github.com/kamildanak/RealEstate",
+  "authorList": ["kamildanak"],
+  "screenshots": []
+}
+]

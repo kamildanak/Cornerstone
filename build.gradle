@@ -1,0 +1,58 @@
+def mcVersion         = "1.12"
+def majorModVersion   = "0"
+def apiModVersion     = "0"
+def minorModVersion   = "1"
+def patchVersion = "0"
+def modID = "realestate"
+def modName = "RealEstate"
+version = mcVersion+"-"+majorModVersion+"."+apiModVersion+"."+minorModVersion+"."+patchVersion
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+group = "com.kamildanak.minecraft.realestate" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = modID
+
+targetCompatibility = "1.8"
+sourceCompatibility = "1.8"
+
+minecraft {
+    version = "1.12-14.21.0.2363"
+    mappings = "snapshot_20170624"
+
+    if (file("../run").exists()) {
+        runDir = "../run"
+    } else {
+        runDir = "run"
+    }
+    replace "{@modVersion}":project.version
+    replace "{@mcVersion}":mcVersion
+    replace "{@modID}":modID
+    replace "{@modName}":modName
+}
+
+dependencies {
+}
+
+processResources
+        {
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
+
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
+                expand 'version': project.version, 'mcversion': project.minecraft.version, 'modID':modID, 'modName':modName
+            }
+
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
