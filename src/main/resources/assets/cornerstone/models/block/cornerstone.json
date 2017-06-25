@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "cornerstone:blocks/cornerstone-top",
+    "side": "cornerstone:blocks/cornerstone-side"
+  }
+}
