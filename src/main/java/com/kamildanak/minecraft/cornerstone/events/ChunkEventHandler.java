@@ -1,7 +1,7 @@
 package com.kamildanak.minecraft.cornerstone.events;
 
 import com.kamildanak.minecraft.cornerstone.Cornerstone;
-import com.kamildanak.minecraft.cornerstone.data.ChunkData;
+import com.kamildanak.minecraft.cornerstone.data.ClusterData;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -13,14 +13,14 @@ public class ChunkEventHandler {
 
     @SubscribeEvent
     public static void loadChunk(ChunkDataEvent.Load event) {
-        ChunkData.get(event.getChunk(), event.getWorld());
+        ClusterData.get(event.getChunk(), event.getWorld().provider.getDimension());
     }
 
     @SubscribeEvent
     public static void saveChunk(ChunkDataEvent.Save event) {
-        ChunkData chunkData = ChunkData.get(event.getChunk(), event.getWorld());
+        ClusterData clusterData = ClusterData.get(event.getChunk(), event.getWorld().provider.getDimension());
         try {
-            chunkData.writeIfChanged(event.getWorld());
+            clusterData.writeIfChanged();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package com.kamildanak.minecraft.cornerstone;
 
-import com.kamildanak.minecraft.cornerstone.data.ChunkData;
+import com.kamildanak.minecraft.cornerstone.data.ClusterData;
+import com.kamildanak.minecraft.cornerstone.filesystem.FileProvider;
 import com.kamildanak.minecraft.cornerstone.settings.Settings;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -47,8 +48,8 @@ public class Cornerstone {
     }
 
     private void configureChunkData(@Nonnull World worldDir) {
-        ChunkData.clear();
-        ChunkData.setLocation(getWorldDir(worldDir));
+        ClusterData.clear();
+        FileProvider.setLocation(getWorldDir(worldDir));
     }
 
     private void registerEventHandler() {
