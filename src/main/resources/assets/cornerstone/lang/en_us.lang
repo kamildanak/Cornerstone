@@ -1,1 +1,3 @@
 tile.cornerstone:cornerstone.name=Cornerstone
+gui.cornerstone:gui_cornerstone_create.create=Create
+gui.cornerstone:gui_cornerstone_create.cancel=Cancel

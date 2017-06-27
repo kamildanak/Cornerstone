@@ -1,10 +1,15 @@
 package com.kamildanak.minecraft.cornerstone;
 
 import com.kamildanak.minecraft.cornerstone.data.ClusterData;
+import com.kamildanak.minecraft.cornerstone.events.RendererEventHandler;
 import com.kamildanak.minecraft.cornerstone.filesystem.FileProvider;
+import com.kamildanak.minecraft.cornerstone.gui.ModGUIs;
 import com.kamildanak.minecraft.cornerstone.settings.Settings;
+import com.kamildanak.minecraft.foamflower.gui.GuiHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -34,6 +39,9 @@ public class Cornerstone {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         registerEventHandler();
+        for (GuiHandler guiHandler : ModGUIs.GUIS) {
+            GuiHandler.register(this);
+        }
     }
 
     @Mod.EventHandler
@@ -53,7 +61,7 @@ public class Cornerstone {
     }
 
     private void registerEventHandler() {
-        //MinecraftForge.EVENT_BUS.register(new ChunkEventHandler());
+        MinecraftForge.EVENT_BUS.register(new RendererEventHandler(Minecraft.getMinecraft()));
     }
 
 }
