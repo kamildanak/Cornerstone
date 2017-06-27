@@ -34,6 +34,11 @@ public class ClusterData {
         this.plots = new ArrayList<>();
     }
 
+    public static void add(Plot plot, int dimension) {
+        ClusterData clusterData = get(plot.getCorner(), dimension);
+        clusterData.plots.add(plot);
+    }
+
     @Nonnull
     private static ClusterData get(@Nonnull Point2i chunkClusterPosition, int dimension) {
         ClusterData clusterData = objects.get(chunkClusterPosition);
@@ -70,7 +75,7 @@ public class ClusterData {
         JsonObject jsonObject = new JsonFileReader(FileProvider.getFile(this)).readJson();
         JsonArray jsonPlots = jsonObject.get("plots").getAsJsonArray();
         for (JsonElement jsonPlot : jsonPlots) {
-            this.plots.add(new Plot(jsonPlot));
+            this.plots.add(new Plot(jsonPlot.getAsJsonObject()));
         }
     }
 

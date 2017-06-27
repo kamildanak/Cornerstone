@@ -1,5 +1,8 @@
 package com.kamildanak.minecraft.cornerstone.data;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 public class Area {
     private int minX, minY, minZ;
     private int maxX, maxY, maxZ;
@@ -25,6 +28,15 @@ public class Area {
         this.maxZ = area.maxZ;
     }
 
+    public Area(JsonObject jsonObject) {
+        this(jsonObject.get("minX").getAsInt(),
+                jsonObject.get("minY").getAsInt(),
+                jsonObject.get("minZ").getAsInt(),
+                jsonObject.get("maxX").getAsInt(),
+                jsonObject.get("maxY").getAsInt(),
+                jsonObject.get("maxZ").getAsInt());
+    }
+
     public int getMinX() {
         return minX;
     }
@@ -47,6 +59,17 @@ public class Area {
 
     public int getMaxZ() {
         return maxZ;
+    }
+
+    public JsonElement toJson() {
+        JsonObject element = new JsonObject();
+        element.addProperty("minX", minX);
+        element.addProperty("minY", minY);
+        element.addProperty("minZ", minZ);
+        element.addProperty("maxX", maxX);
+        element.addProperty("maxY", maxY);
+        element.addProperty("maxZ", maxZ);
+        return element;
     }
 
     // Building zones
