@@ -1,11 +1,14 @@
 package com.kamildanak.minecraft.cornerstone.events;
 
+import com.kamildanak.minecraft.cornerstone.Cornerstone;
+import com.kamildanak.minecraft.cornerstone.data.PlayerData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -30,13 +33,16 @@ public class RendererEventHandler {
         GlStateManager.glLineWidth(2.0F);
         bufferbuilder.begin(3, DefaultVertexFormats.POSITION_COLOR);
 
-        /*double x = entityplayer.posX;
-        double y = entityplayer.posY;
-        double z = entityplayer.posZ;
-        addLine(bufferbuilder, x+0.5, y-0.5, z+0.5, x+0.5+10, y-0.5, z+0.5, dx, dy, dz);
-        addLine(bufferbuilder, x+0.5, y-0.5, z+0.5, x+0.5-10, y-0.5, z+0.5, dx, dy, dz);
-        addLine(bufferbuilder, x+0.5, y-0.5, z+0.5, x+0.5, y-0.5, z+0.5+10, dx, dy, dz);
-        addLine(bufferbuilder, x+0.5, y-0.5, z+0.5, x+0.5, y-0.5, z+0.5-10, dx, dy, dz);*/
+        int maxLen = Cornerstone.settings.getMaxPlotLength();
+        for (BlockPos pos : PlayerData.get(entityplayer.getUniqueID()).getCornerstoneUnderConstruction()) {
+            double x = pos.getX();
+            double y = pos.getY();
+            double z = pos.getZ();
+            addLine(bufferbuilder, x + 0.5, y + 0.5, z + 0.5, x - 0.5 + maxLen, y + 0.5, z + 0.5, dx, dy, dz);
+            addLine(bufferbuilder, x + 0.5, y + 0.5, z + 0.5, x + 1.5 - maxLen, y + 0.5, z + 0.5, dx, dy, dz);
+            addLine(bufferbuilder, x + 0.5, y + 0.5, z + 0.5, x + 0.5, y + 0.5, z - 0.5 + maxLen, dx, dy, dz);
+            addLine(bufferbuilder, x + 0.5, y + 0.5, z + 0.5, x + 0.5, y + 0.5, z + 1.5 - maxLen, dx, dy, dz);
+        }
 
         tessellator.draw();
 
