@@ -2,6 +2,8 @@ package com.kamildanak.minecraft.cornerstone.items;
 
 import com.kamildanak.minecraft.cornerstone.blocks.BlockCornerstone;
 import com.kamildanak.minecraft.cornerstone.data.PlayerData;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumActionResult;
@@ -22,8 +24,11 @@ public class ItemCornerstone extends ItemBlock {
     @Nonnull
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, @Nonnull BlockPos pos, @Nonnull EnumHand hand,
                                       @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+        IBlockState iblockstate = worldIn.getBlockState(pos);
+        Block block = iblockstate.getBlock();
+        BlockPos placePos = (block.isReplaceable(worldIn, pos)) ? pos : pos.offset(facing);
         PlayerData playerData = PlayerData.get(player.getUniqueID());
-        if (!playerData.canPlaceCornerstoneAt(pos)) return EnumActionResult.FAIL;
+        if (!playerData.canPlaceCornerstoneAt(placePos)) return EnumActionResult.FAIL;
         return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
 }

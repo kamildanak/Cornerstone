@@ -40,6 +40,7 @@ public class PlayerData {
                 return true;
             case 1:
                 pos0 = cornerstoneUnderConstruction.get(0);
+                if (pos0.getY() != posN.getY()) return false;
                 if (pos0.getX() == posN.getX())
                     return Math.abs(pos0.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength();
                 if (pos0.getZ() == posN.getZ())
@@ -48,6 +49,7 @@ public class PlayerData {
             case 2:
                 pos0 = cornerstoneUnderConstruction.get(0);
                 pos1 = cornerstoneUnderConstruction.get(1);
+                if (pos0.getY() != posN.getY() || pos1.getY() != posN.getY()) return false;
                 if (pos0.getX() == pos1.getX()) {
                     if (pos0.getZ() == posN.getZ())
                         return Math.abs(pos0.getX() - posN.getX()) < Cornerstone.settings.getMaxPlotLength();
@@ -60,15 +62,37 @@ public class PlayerData {
                     if (pos1.getX() == posN.getX())
                         return Math.abs(pos1.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength();
                 }
+                if (posN.getX() == pos0.getX() && posN.getZ() == pos1.getZ())
+                    return Math.abs(pos1.getX() - posN.getX()) < Cornerstone.settings.getMaxPlotLength() &&
+                            Math.abs(pos0.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength();
+                if (posN.getZ() == pos0.getZ() && posN.getX() == pos1.getX())
+                    return Math.abs(pos1.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength() &&
+                            Math.abs(pos0.getX() - posN.getX()) < Cornerstone.settings.getMaxPlotLength();
                 return false;
             case 3:
                 pos0 = cornerstoneUnderConstruction.get(0);
                 pos1 = cornerstoneUnderConstruction.get(1);
                 pos2 = cornerstoneUnderConstruction.get(2);
-                if (pos0.getX() == pos1.getX() && pos0.getZ() == pos2.getZ())
-                    return posN.getX() == pos2.getX() && posN.getZ() == pos1.getZ();
-                if (pos0.getZ() == pos1.getZ() && pos0.getX() == pos2.getX())
-                    return posN.getZ() == pos2.getZ() && posN.getX() == pos1.getX();
+                if (pos0.getY() != posN.getY() || pos1.getY() != posN.getY() || pos2.getY() != posN.getY())
+                    return false;
+                if (posN.getX() == pos0.getX() && posN.getZ() == pos1.getZ())
+                    return Math.abs(pos1.getX() - posN.getX()) < Cornerstone.settings.getMaxPlotLength() &&
+                            Math.abs(pos0.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength();
+                if (posN.getZ() == pos0.getZ() && posN.getX() == pos1.getX())
+                    return Math.abs(pos1.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength() &&
+                            Math.abs(pos0.getX() - posN.getX()) < Cornerstone.settings.getMaxPlotLength();
+                if (posN.getX() == pos2.getX() && posN.getZ() == pos1.getZ())
+                    return Math.abs(pos1.getX() - posN.getX()) < Cornerstone.settings.getMaxPlotLength() &&
+                            Math.abs(pos2.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength();
+                if (posN.getZ() == pos2.getZ() && posN.getX() == pos1.getX())
+                    return Math.abs(pos1.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength() &&
+                            Math.abs(pos2.getX() - posN.getX()) < Cornerstone.settings.getMaxPlotLength();
+                if (posN.getX() == pos0.getX() && posN.getZ() == pos2.getZ())
+                    return Math.abs(pos2.getX() - posN.getX()) < Cornerstone.settings.getMaxPlotLength() &&
+                            Math.abs(pos0.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength();
+                if (posN.getZ() == pos0.getZ() && posN.getX() == pos2.getX())
+                    return Math.abs(pos2.getZ() - posN.getZ()) < Cornerstone.settings.getMaxPlotLength() &&
+                            Math.abs(pos0.getX() - posN.getX()) < Cornerstone.settings.getMaxPlotLength();
                 return false;
         }
         return false;
