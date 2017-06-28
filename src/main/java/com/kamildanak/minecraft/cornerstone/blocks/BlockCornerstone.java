@@ -3,18 +3,26 @@ package com.kamildanak.minecraft.cornerstone.blocks;
 import com.kamildanak.minecraft.cornerstone.data.PlayerData;
 import com.kamildanak.minecraft.cornerstone.gui.ModGUIs;
 import com.kamildanak.minecraft.cornerstone.items.ItemCornerstone;
+import com.kamildanak.minecraft.cornerstone.tileentity.TileEntityCornerstone;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockCornerstone extends AbstractBlock {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class BlockCornerstone extends AbstractBlockContainer {
     public BlockCornerstone(String name, Material material) {
         super(name, material);
         setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
@@ -36,23 +44,36 @@ public class BlockCornerstone extends AbstractBlock {
     }
 
     @Override
-    public void onBlockClicked(World world, BlockPos blockPos, EntityPlayer entityplayer) {
-        PlayerData playerData = PlayerData.get(entityplayer.getUniqueID());
-        if (!(entityplayer instanceof EntityPlayerMP)) return;
-        for (BlockPos pos : playerData.getCornerstoneUnderConstruction()) {
-            if ((pos.getX() == blockPos.getX()) && (pos.getY() == blockPos.getY()) &&
-                    (pos.getZ() == blockPos.getZ()))
-
-            {
-                dropBlockAsItem(world, blockPos, world.getBlockState(blockPos), 0);
-                world.setBlockToAir(blockPos);
-                playerData.removeCornerstone(pos);
-                break;
-            }
+    public void onBlockPlacedBy(World world, BlockPos blockPos, IBlockState state, EntityLivingBase entityLiving,
+                                @Nonnull ItemStack stack) {
+        if (entityLiving instanceof EntityPlayerMP) {
+            TileEntityCornerstone e = new TileEntityCornerstone((EntityPlayer) entityLiving);
+            world.setTileEntity(blockPos, e);
+            PlayerData.get(entityLiving.getUniqueID()).addCornerstone(blockPos);
         }
     }
 
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+    @Override
+    public void breakBlock(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
+        TileEntityCornerstone tileEntityCornerstone = (TileEntityCornerstone) worldIn.getTileEntity(pos);
 
+        if (tileEntityCornerstone == null)
+            return;
+
+        PlayerData.get(tileEntityCornerstone.getOwnerUUID()).removeCornerstone(pos);
+        worldIn.removeTileEntity(pos);
+        super.breakBlock(worldIn, pos, state);
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(@Nullable World worldIn, int meta) {
+        return new TileEntityCornerstone();
+    }
+
+    @Override
+    @Nonnull
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.MODEL;
     }
 }

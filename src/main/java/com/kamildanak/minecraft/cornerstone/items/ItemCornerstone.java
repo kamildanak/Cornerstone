@@ -3,7 +3,6 @@ package com.kamildanak.minecraft.cornerstone.items;
 import com.kamildanak.minecraft.cornerstone.blocks.BlockCornerstone;
 import com.kamildanak.minecraft.cornerstone.data.PlayerData;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -25,9 +24,6 @@ public class ItemCornerstone extends ItemBlock {
                                       @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         PlayerData playerData = PlayerData.get(player.getUniqueID());
         if (!playerData.canPlaceCornerstoneAt(pos)) return EnumActionResult.FAIL;
-        EnumActionResult result = super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-        if (result == EnumActionResult.SUCCESS && player instanceof EntityPlayerMP)
-            playerData.addCornerstone(pos);
-        return result;
+        return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
 }

@@ -5,6 +5,7 @@ import com.kamildanak.minecraft.cornerstone.events.RendererEventHandler;
 import com.kamildanak.minecraft.cornerstone.filesystem.FileProvider;
 import com.kamildanak.minecraft.cornerstone.gui.ModGUIs;
 import com.kamildanak.minecraft.cornerstone.settings.Settings;
+import com.kamildanak.minecraft.cornerstone.tileentity.TileEntityCornerstone;
 import com.kamildanak.minecraft.foamflower.gui.GuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
 
@@ -42,6 +44,8 @@ public class Cornerstone {
         for (GuiHandler guiHandler : ModGUIs.GUIS) {
             GuiHandler.register(this);
         }
+
+        GameRegistry.registerTileEntity(TileEntityCornerstone.class, "containerCornerstone");
     }
 
     @Mod.EventHandler
