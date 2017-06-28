@@ -1,12 +1,12 @@
 package com.kamildanak.minecraft.cornerstone.events;
 
 import com.kamildanak.minecraft.cornerstone.Cornerstone;
+import com.kamildanak.minecraft.cornerstone.blocks.AbstractBlock;
 import com.kamildanak.minecraft.cornerstone.blocks.ModBlocks;
 import com.kamildanak.minecraft.cornerstone.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
@@ -25,8 +25,8 @@ public class RegistryEventHandler {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(ModItems.ITEMS);
 
-        for (Block block : ModBlocks.BLOCKS) {
-            event.getRegistry().register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+        for (AbstractBlock block : ModBlocks.BLOCKS) {
+            event.getRegistry().register(block.getItemToRegister());
         }
     }
 

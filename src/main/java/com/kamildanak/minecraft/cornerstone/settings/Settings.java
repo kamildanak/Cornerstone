@@ -8,6 +8,7 @@ public class Settings implements ISettings {
 
     private int chunkClusterSize;
     private int searchNeighbours;
+    private int maxPlotLength;
 
     public Settings() {
 
@@ -18,6 +19,9 @@ public class Settings implements ISettings {
                 8, 1, 128, "How many chunks (16x16 blocks) should have common plot interval tree");
         searchNeighbours = config.getInt("searchNeighbours", "dataStorage",
                 2, 2, 4, "Number of chunk clusters to search [2->(x,y),(x-1,y),(x,y-1),(x-1,y-1)]");
+        maxPlotLength = config.getInt("maxPlotLength", "general",
+                Math.min(128, 16 * chunkClusterSize), 5, 16 * chunkClusterSize,
+                "Maximum plot length, cannot be more than 16*chunkClusterSize");
     }
 
     public void loadConfig(FMLPreInitializationEvent event) {
@@ -36,5 +40,9 @@ public class Settings implements ISettings {
 
     public int getSearchNeighbours() {
         return searchNeighbours;
+    }
+
+    public int getMaxPlotLength() {
+        return maxPlotLength;
     }
 }
