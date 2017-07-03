@@ -59,8 +59,9 @@ public class BlockCornerstone extends AbstractBlockContainer {
 
         if (tileEntityCornerstone == null)
             return;
-
-        PlayerData.get(tileEntityCornerstone.getOwnerUUID()).removeCornerstone(pos);
+        if (!worldIn.isRemote) {
+            PlayerData.get(tileEntityCornerstone.getOwnerUUID()).removeCornerstone(pos);
+        }
         worldIn.removeTileEntity(pos);
         super.breakBlock(worldIn, pos, state);
     }

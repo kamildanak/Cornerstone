@@ -1,6 +1,9 @@
 package com.kamildanak.minecraft.cornerstone.data;
 
 import com.kamildanak.minecraft.cornerstone.Cornerstone;
+import com.kamildanak.minecraft.cornerstone.network.PacketDispatcher;
+import com.kamildanak.minecraft.cornerstone.network.client.MessagePlayerData;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
@@ -11,8 +14,10 @@ import java.util.UUID;
 public class PlayerData {
     private static HashMap<UUID, PlayerData> objects = new HashMap<>();
     private ArrayList<BlockPos> cornerstoneUnderConstruction;
+    private UUID uuid;
 
-    private PlayerData() {
+    private PlayerData(UUID uuid) {
+        this.uuid = uuid;
         cornerstoneUnderConstruction = new ArrayList<>();
     }
 
@@ -20,13 +25,14 @@ public class PlayerData {
     public static PlayerData get(@Nonnull UUID playerUUID) {
         PlayerData playerData = objects.get(playerUUID);
         if (playerData != null) return playerData;
-        playerData = new PlayerData();
+        playerData = new PlayerData(playerUUID);
         objects.put(playerUUID, playerData);
         return playerData;
     }
 
     public void addCornerstone(BlockPos blockPos) {
         cornerstoneUnderConstruction.add(blockPos);
+        sendUpdateToPlayer();
     }
 
     public ArrayList<BlockPos> getCornerstoneUnderConstruction() {
@@ -101,5 +107,13 @@ public class PlayerData {
     public void removeCornerstone(BlockPos pos) {
         cornerstoneUnderConstruction.removeIf(blockPos ->
                 (blockPos.getX() == pos.getX()) && (blockPos.getY() == pos.getY()) && (blockPos.getZ() == pos.getZ()));
+        sendUpdateToPlayer();
+    }
+
+    private void sendUpdateToPlayer() {
+        if (Cornerstone.minecraftServer == null) return;
+        EntityPlayerMP playerByUUID = Cornerstone.minecraftServer.getPlayerList().getPlayerByUUID(uuid);
+        if (playerByUUID == null) return;
+        PacketDispatcher.sendTo(new MessagePlayerData(this), playerByUUID);
     }
 }
