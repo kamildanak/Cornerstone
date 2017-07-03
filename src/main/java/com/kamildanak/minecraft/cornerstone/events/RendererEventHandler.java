@@ -23,7 +23,7 @@ public class RendererEventHandler {
 
     private static void render(double partialTicks, EntityPlayer entityplayer) {
         ArrayList<BlockPos> cornerstones = new ArrayList<>();
-        cornerstones.addAll(PlayerData.get(entityplayer.getUniqueID()).getCornerstoneUnderConstruction());
+        cornerstones.addAll(PlayerData.get(entityplayer.getUniqueID(), entityplayer.world.provider.getDimension()).getCornerstoneUnderConstruction());
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         GlStateManager.disableTexture2D();

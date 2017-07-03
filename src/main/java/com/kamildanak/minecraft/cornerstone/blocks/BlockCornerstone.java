@@ -49,7 +49,7 @@ public class BlockCornerstone extends AbstractBlockContainer {
         if (entityLiving instanceof EntityPlayerMP) {
             TileEntityCornerstone e = new TileEntityCornerstone((EntityPlayer) entityLiving);
             world.setTileEntity(blockPos, e);
-            PlayerData.get(entityLiving.getUniqueID()).addCornerstone(blockPos);
+            PlayerData.get(entityLiving.getUniqueID(), world.provider.getDimension()).addCornerstone(blockPos);
         }
     }
 
@@ -60,7 +60,7 @@ public class BlockCornerstone extends AbstractBlockContainer {
         if (tileEntityCornerstone == null)
             return;
         if (!worldIn.isRemote) {
-            PlayerData.get(tileEntityCornerstone.getOwnerUUID()).removeCornerstone(pos);
+            PlayerData.get(tileEntityCornerstone.getOwnerUUID(), worldIn.provider.getDimension()).removeCornerstone(pos);
         }
         worldIn.removeTileEntity(pos);
         super.breakBlock(worldIn, pos, state);

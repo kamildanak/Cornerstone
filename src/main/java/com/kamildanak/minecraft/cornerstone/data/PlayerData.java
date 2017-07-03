@@ -12,22 +12,29 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerData {
-    private static HashMap<UUID, PlayerData> objects = new HashMap<>();
+    private static HashMap<Integer, HashMap<UUID, PlayerData>> objects = new HashMap<Integer, HashMap<UUID, PlayerData>>();
     private ArrayList<BlockPos> cornerstoneUnderConstruction;
     private UUID uuid;
+    private int dimension;
 
-    private PlayerData(UUID uuid) {
+    private PlayerData(UUID uuid, int dimension) {
         this.uuid = uuid;
+        this.dimension = dimension;
         cornerstoneUnderConstruction = new ArrayList<>();
     }
 
     @Nonnull
-    public static PlayerData get(@Nonnull UUID playerUUID) {
-        PlayerData playerData = objects.get(playerUUID);
+    public static PlayerData get(@Nonnull UUID playerUUID, int dimension) {
+        HashMap<UUID, PlayerData> map = objects.computeIfAbsent(dimension, k -> new HashMap<UUID, PlayerData>());
+        PlayerData playerData = map.get(playerUUID);
         if (playerData != null) return playerData;
-        playerData = new PlayerData(playerUUID);
-        objects.put(playerUUID, playerData);
+        playerData = new PlayerData(playerUUID, dimension);
+        map.put(playerUUID, playerData);
         return playerData;
+    }
+
+    public static void clear() {
+        objects.clear();
     }
 
     public void addCornerstone(BlockPos blockPos) {
@@ -110,10 +117,10 @@ public class PlayerData {
         sendUpdateToPlayer();
     }
 
-    private void sendUpdateToPlayer() {
+    public void sendUpdateToPlayer() {
         if (Cornerstone.minecraftServer == null) return;
         EntityPlayerMP playerByUUID = Cornerstone.minecraftServer.getPlayerList().getPlayerByUUID(uuid);
         if (playerByUUID == null) return;
-        PacketDispatcher.sendTo(new MessagePlayerData(this), playerByUUID);
+        PacketDispatcher.sendTo(new MessagePlayerData(this, dimension), playerByUUID);
     }
 }

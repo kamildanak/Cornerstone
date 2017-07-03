@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MessagePlayerData extends AbstractMessage.AbstractClientMessage<MessagePlayerData> {
+    private int dim;
     private ArrayList<BlockPos> cornerstoneUnderConstruction;
 
 
@@ -18,7 +19,8 @@ public class MessagePlayerData extends AbstractMessage.AbstractClientMessage<Mes
     public MessagePlayerData() {
     }
 
-    public MessagePlayerData(PlayerData playerData) {
+    public MessagePlayerData(PlayerData playerData, int dim) {
+        this.dim = dim;
         this.cornerstoneUnderConstruction = new ArrayList<>();
         this.cornerstoneUnderConstruction = playerData.getCornerstoneUnderConstruction();
     }
@@ -26,6 +28,7 @@ public class MessagePlayerData extends AbstractMessage.AbstractClientMessage<Mes
     @Override
     protected void read(PacketBuffer buffer) throws IOException {
         cornerstoneUnderConstruction = new ArrayList<>();
+        dim = buffer.readInt();
         int size = buffer.readInt();
         for (int i = 0; i < size; i++) {
             cornerstoneUnderConstruction.add(BlockPos.fromLong(buffer.readLong()));
@@ -34,6 +37,7 @@ public class MessagePlayerData extends AbstractMessage.AbstractClientMessage<Mes
 
     @Override
     protected void write(PacketBuffer buffer) throws IOException {
+        buffer.writeInt(dim);
         buffer.writeInt(cornerstoneUnderConstruction.size());
         for (BlockPos pos : cornerstoneUnderConstruction) {
             buffer.writeLong(pos.toLong());
@@ -42,7 +46,7 @@ public class MessagePlayerData extends AbstractMessage.AbstractClientMessage<Mes
 
     @Override
     public void process(EntityPlayer player, Side side) {
-        ArrayList<BlockPos> cornerstones = PlayerData.get(player.getUniqueID()).getCornerstoneUnderConstruction();
+        ArrayList<BlockPos> cornerstones = PlayerData.get(player.getUniqueID(), dim).getCornerstoneUnderConstruction();
         cornerstones.clear();
         cornerstones.addAll(cornerstoneUnderConstruction);
     }

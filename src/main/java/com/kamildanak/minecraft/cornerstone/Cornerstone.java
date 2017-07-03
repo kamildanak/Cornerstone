@@ -1,6 +1,7 @@
 package com.kamildanak.minecraft.cornerstone;
 
 import com.kamildanak.minecraft.cornerstone.data.ClusterData;
+import com.kamildanak.minecraft.cornerstone.data.PlayerData;
 import com.kamildanak.minecraft.cornerstone.events.RendererEventHandler;
 import com.kamildanak.minecraft.cornerstone.filesystem.FileProvider;
 import com.kamildanak.minecraft.cornerstone.gui.ModGUIs;
@@ -65,6 +66,7 @@ public class Cornerstone {
     public void onServerStart(FMLServerStartingEvent event) {
         minecraftServer = event.getServer();
         configureChunkData(minecraftServer.getEntityWorld());
+        PlayerData.clear();
     }
 
     @Mod.EventHandler

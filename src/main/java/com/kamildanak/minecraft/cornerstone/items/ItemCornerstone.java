@@ -27,7 +27,7 @@ public class ItemCornerstone extends ItemBlock {
         IBlockState iblockstate = worldIn.getBlockState(pos);
         Block block = iblockstate.getBlock();
         BlockPos placePos = (block.isReplaceable(worldIn, pos)) ? pos : pos.offset(facing);
-        PlayerData playerData = PlayerData.get(player.getUniqueID());
+        PlayerData playerData = PlayerData.get(player.getUniqueID(), worldIn.provider.getDimension());
         if (!playerData.canPlaceCornerstoneAt(placePos)) return EnumActionResult.FAIL;
         return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
