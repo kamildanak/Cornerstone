@@ -1,10 +1,10 @@
-def mcVersion         = "1.12" // Always matches the Minecraft version the mod is for.
-def majorModVersion   = "0" // Removing items/blocks, changing mechanics, updating to a new Minecraft version.
-def majorApiModVersion     = "0" // Changing the order of enums, return types of methods, removing methods
-def minorModVersion   = "1" // Adding items, blocks, tile entities, Adding new mechanics., Deprecating public methods.
+def mcVersion = "1.12" // Always matches the Minecraft version the mod is for.
+def majorModVersion = "0" // Removing items/blocks, changing mechanics, updating to a new Minecraft version.
+def majorApiModVersion = "0" // Changing the order of enums, return types of methods, removing methods
+def minorModVersion = "1" // Adding items, blocks, tile entities, Adding new mechanics., Deprecating public methods.
 def patchVersion = "0" //Bugfixes.
 def suffix = "" // "-final" - last release for that Minecraft, "-betaX" - Pre-releases, "-rcX"-Release Candidates
-version = mcVersion+"-"+majorModVersion+"."+majorApiModVersion+"."+minorModVersion+"."+patchVersion+suffix
+version = mcVersion + "-" + majorModVersion + "." + majorApiModVersion + "." + minorModVersion + "." + patchVersion + suffix
 
 def modID = "cornerstone"
 def modName = "Cornerstone"
@@ -19,6 +19,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven'
 
 group = "com.kamildanak.minecraft.cornerstone" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = modID
@@ -81,7 +82,7 @@ artifacts {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: "file://localhost/"+projectDir+"/../local-repo/")
+            repository(url: "file://localhost/" + projectDir + "/../local-repo/")
         }
     }
 }

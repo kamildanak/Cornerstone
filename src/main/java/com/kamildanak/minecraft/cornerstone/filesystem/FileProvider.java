@@ -2,6 +2,7 @@ package com.kamildanak.minecraft.cornerstone.filesystem;
 
 import com.kamildanak.minecraft.cornerstone.Cornerstone;
 import com.kamildanak.minecraft.cornerstone.data.ClusterData;
+import com.kamildanak.minecraft.cornerstone.data.PlayerData;
 
 import java.io.File;
 
@@ -35,5 +36,10 @@ public class FileProvider {
 
     public static void clear() {
         worldLocation = null;
+    }
+
+    public static File getFile(PlayerData playerData) {
+        File saveLocation = getSaveLocation(playerData.dimension);
+        return new File(saveLocation, playerData.uuid + ".json");
     }
 }
