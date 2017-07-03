@@ -1,11 +1,13 @@
-def mcVersion = "1.12"
-def majorModVersion = "0"
-def apiModVersion = "0"
-def minorModVersion = "1"
-def patchVersion = "0"
+def mcVersion         = "1.12" // Always matches the Minecraft version the mod is for.
+def majorModVersion   = "0" // Removing items/blocks, changing mechanics, updating to a new Minecraft version.
+def majorApiModVersion     = "0" // Changing the order of enums, return types of methods, removing methods
+def minorModVersion   = "1" // Adding items, blocks, tile entities, Adding new mechanics., Deprecating public methods.
+def patchVersion = "0" //Bugfixes.
+def suffix = "" // "-final" - last release for that Minecraft, "-betaX" - Pre-releases, "-rcX"-Release Candidates
+version = mcVersion+"-"+majorModVersion+"."+majorApiModVersion+"."+minorModVersion+"."+patchVersion+suffix
+
 def modID = "cornerstone"
 def modName = "Cornerstone"
-version = mcVersion + "-" + majorModVersion + "." + apiModVersion + "." + minorModVersion + "." + patchVersion
 
 buildscript {
     repositories {
@@ -39,10 +41,16 @@ minecraft {
     replace "{@modName}": modName
 }
 
-dependencies {
-    compile project(':Foamflower')
+repositories {
+    maven {
+        url "../local-repo"
+    }
 }
 
+dependencies {
+    //compile project(':Foamflower')
+    compile name: "foamflower", group: "com.kamildanak.minecraft.foamflower", version: "1.12-0.0.1.0", classifier: "deobf"
+}
 processResources
         {
             inputs.property "version", project.version
@@ -57,3 +65,23 @@ processResources
                 exclude 'mcmod.info'
             }
         }
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+tasks.build.dependsOn('sourceJar', 'deobfJar')
+
+artifacts {
+    archives deobfJar
+    archives sourceJar
+    archives jar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://localhost/"+projectDir+"/../local-repo/")
+        }
+    }
+}
