@@ -24,12 +24,14 @@ public class PlayerData {
     public UUID uuid;
     public int dimension;
     private ArrayList<BlockPos> cornerstoneUnderConstruction;
+    private ArrayList<Plot> plots;
     private boolean changed;
 
     private PlayerData(UUID uuid, int dimension, boolean read) {
         this.uuid = uuid;
         this.dimension = dimension;
         cornerstoneUnderConstruction = new ArrayList<>();
+        plots = new ArrayList<>();
         if (!read) return;
         try {
             this.read();
@@ -77,6 +79,16 @@ public class PlayerData {
 
     public ArrayList<BlockPos> getCornerstoneUnderConstruction() {
         return cornerstoneUnderConstruction;
+    }
+
+    public ArrayList<Plot> getPlotsCorners() {
+        return plots;
+    }
+
+    public void addPlot(Plot plot) {
+        plots.add(plot);
+        sendUpdateToPlayer();
+        changed = true;
     }
 
     public boolean canPlaceCornerstoneAt(BlockPos posN) {
@@ -151,6 +163,12 @@ public class PlayerData {
         changed = true;
     }
 
+    public void removePlot(Plot plot) {
+        plots.removeIf(p -> p.getCornerMin() == plot.getCornerMin());
+        sendUpdateToPlayer();
+        changed = true;
+    }
+
     public void sendUpdateToPlayer() {
         if (Cornerstone.minecraftServer == null) return;
         EntityPlayerMP playerByUUID = Cornerstone.minecraftServer.getPlayerList().getPlayerByUUID(uuid);
@@ -162,21 +180,52 @@ public class PlayerData {
         JsonObject obj = new JsonObject();
 
         obj.add("cornerstonesUC", blockPosArrayToJson(cornerstoneUnderConstruction));
+        obj.add("plots", plotArrayToJson(plots));
         try (JsonFileWriter file = new JsonFileWriter(FileProvider.getFile(this))) {
             file.write(obj);
         }
         changed = false;
     }
 
+    private JsonElement plotArrayToJson(ArrayList<Plot> plots) {
+        JsonArray jsonArray = new JsonArray();
+        for (Plot plot : plots) {
+            JsonObject jsonObject = new JsonObject();
+            BlockPos corner = plot.getCornerMin();
+            BlockPos cornerUp = plot.getCornerMax();
+            jsonObject.addProperty("minX", corner.getX());
+            jsonObject.addProperty("minY", corner.getY());
+            jsonObject.addProperty("minZ", corner.getZ());
+            jsonObject.addProperty("maxX", cornerUp.getX());
+            jsonObject.addProperty("maxY", cornerUp.getY());
+            jsonObject.addProperty("maxZ", cornerUp.getZ());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
+    }
+
     private void read() throws IOException {
         changed = false;
         this.cornerstoneUnderConstruction = new ArrayList<>();
         JsonObject jsonObject = new JsonFileReader(FileProvider.getFile(this)).readJson();
-        JsonArray cornerstonesUC = jsonObject.get("cornerstonesUC").getAsJsonArray();
-        for (JsonElement jsonCornerstone : cornerstonesUC) {
-            JsonObject object = jsonCornerstone.getAsJsonObject();
-            this.cornerstoneUnderConstruction.add(
-                    new BlockPos(object.get("x").getAsInt(), object.get("y").getAsInt(), object.get("z").getAsInt()));
+        JsonElement cornerstonesElement = jsonObject.get("cornerstonesUC");
+        if (cornerstonesElement != null) {
+            JsonArray cornerstonesUC = cornerstonesElement.getAsJsonArray();
+            for (JsonElement jsonCornerstone : cornerstonesUC) {
+                JsonObject object = jsonCornerstone.getAsJsonObject();
+                this.cornerstoneUnderConstruction.add(
+                        new BlockPos(object.get("x").getAsInt(), object.get("y").getAsInt(), object.get("z").getAsInt()));
+            }
+        }
+
+        JsonElement plotsElement = jsonObject.get("plots");
+        if (plotsElement == null) return;
+        JsonArray plots = plotsElement.getAsJsonArray();
+        for (JsonElement plot : plots) {
+            JsonObject object = plot.getAsJsonObject();
+            this.plots.add(new Plot(new Area(object.get("minX").getAsInt(), object.get("minY").getAsInt(), object.get("minZ").getAsInt(),
+                    object.get("maxX").getAsInt(), object.get("maxY").getAsInt(), object.get("maxZ").getAsInt()
+            ), this.uuid));
         }
     }
 
@@ -184,4 +233,7 @@ public class PlayerData {
         if (changed) write();
     }
 
+    public void removeCornerstones() {
+        cornerstoneUnderConstruction = new ArrayList<>();
+    }
 }

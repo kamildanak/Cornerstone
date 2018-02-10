@@ -1,6 +1,6 @@
 package com.kamildanak.minecraft.cornerstone;
 
-import com.kamildanak.minecraft.cornerstone.data.ClusterData;
+import com.kamildanak.minecraft.cornerstone.data.ChunkPlotDataProvider;
 import com.kamildanak.minecraft.cornerstone.data.PlayerData;
 import com.kamildanak.minecraft.cornerstone.events.RendererEventHandler;
 import com.kamildanak.minecraft.cornerstone.filesystem.FileProvider;
@@ -11,7 +11,6 @@ import com.kamildanak.minecraft.cornerstone.tileentity.TileEntityCornerstone;
 import com.kamildanak.minecraft.foamflower.gui.GuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -19,8 +18,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
-
-import static com.kamildanak.minecraft.cornerstone.Utils.getWorldDir;
+import java.io.File;
 
 @Mod(modid = Cornerstone.modID, name = Cornerstone.modName, version = Cornerstone.version,
         acceptedMinecraftVersions = Cornerstone.mcVersion)
@@ -63,9 +61,9 @@ public class Cornerstone {
     }
 
     @Mod.EventHandler
-    public void onServerStart(FMLServerStartingEvent event) {
+    public void onFMLServerAboutToStartEvent(FMLServerAboutToStartEvent event) {
         minecraftServer = event.getServer();
-        configureChunkData(minecraftServer.getEntityWorld());
+        configureChunkData(minecraftServer.getDataDirectory());
         PlayerData.clear();
     }
 
@@ -74,9 +72,9 @@ public class Cornerstone {
         minecraftServer = null;
     }
 
-    private void configureChunkData(@Nonnull World worldDir) {
-        ClusterData.clear();
-        FileProvider.setLocation(getWorldDir(worldDir));
+    private void configureChunkData(@Nonnull File worldDir) {
+        ChunkPlotDataProvider.clear();
+        FileProvider.setLocation(worldDir);
     }
 
     private void registerEventHandler() {

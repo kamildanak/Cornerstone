@@ -1,8 +1,10 @@
 package com.kamildanak.minecraft.cornerstone.proxy;
 
+import com.kamildanak.minecraft.cornerstone.gui.hud.HintHUD;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 @SuppressWarnings("unused")
@@ -16,6 +18,7 @@ public class ProxyClient extends Proxy {
     @Override
     public void init() {
         mc = Minecraft.getMinecraft();
+        MinecraftForge.EVENT_BUS.register(new HintHUD(Minecraft.getMinecraft()));
     }
 
     @Override

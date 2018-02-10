@@ -2,6 +2,7 @@ package com.kamildanak.minecraft.cornerstone.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.util.math.BlockPos;
 
 public class Area {
     private int minX, minY, minZ;
@@ -70,6 +71,15 @@ public class Area {
         element.addProperty("maxY", maxY);
         element.addProperty("maxZ", maxZ);
         return element;
+    }
+
+    public boolean contains(BlockPos pos) {
+        return pos.getX() >= minX && pos.getY() >= minY && pos.getZ() >= minZ &&
+                pos.getX() <= maxX && pos.getY() <= maxY && pos.getZ() <= maxZ;
+    }
+
+    public BlockPos getCorner() {
+        return new BlockPos(minX, minY, minZ);
     }
 
     // Building zones

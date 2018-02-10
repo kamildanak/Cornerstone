@@ -1,5 +1,6 @@
 package com.kamildanak.minecraft.cornerstone.blocks;
 
+import com.kamildanak.minecraft.cornerstone.data.ChunkPlotDataProvider;
 import com.kamildanak.minecraft.cornerstone.data.PlayerData;
 import com.kamildanak.minecraft.cornerstone.gui.ModGUIs;
 import com.kamildanak.minecraft.cornerstone.items.ItemCornerstone;
@@ -34,7 +35,13 @@ public class BlockCornerstone extends AbstractBlockContainer {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
                                     EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ModGUIs.CORNERSTONE_CREATE.open(playerIn, worldIn, pos);
+        playerIn.getGameProfile().getId();
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (worldIn.isRemote && te instanceof TileEntityCornerstone && !((TileEntityCornerstone) te).isActivated() &&
+                PlayerData.get(playerIn.getUniqueID(),
+                        worldIn.provider.getDimension()).getCornerstoneUnderConstruction().size() >= 4) {
+            ModGUIs.CORNERSTONE_CREATE.open(playerIn, worldIn, pos);
+        }
         return true;
     }
 
@@ -54,12 +61,37 @@ public class BlockCornerstone extends AbstractBlockContainer {
     }
 
     @Override
+    public void onBlockClicked(World world, BlockPos blockPos, EntityPlayer entityplayer) {
+        TileEntityCornerstone tileEntity = (TileEntityCornerstone) world.getTileEntity(blockPos);
+        if (tileEntity == null)
+            return;
+        if (!tileEntity.isActivated() || tileEntity.getOwnerUUID().equals(entityplayer.getUniqueID())) {
+            dropBlockAsItem(world, blockPos, world.getBlockState(blockPos), 0);
+            world.setBlockToAir(blockPos);
+        }
+    }
+
+
+    /**
+     * Called serverside after this block is replaced with another in Chunk, but before the Tile Entity is updated
+     */
+    @Override
     public void breakBlock(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
+        if (worldIn.isRemote) return;
         TileEntityCornerstone tileEntityCornerstone = (TileEntityCornerstone) worldIn.getTileEntity(pos);
 
         if (tileEntityCornerstone == null)
             return;
-        if (!worldIn.isRemote) {
+
+        if (tileEntityCornerstone.isActivated()) {
+            for (BlockPos connectedPos : tileEntityCornerstone.getConnectedCornerstones()) {
+                TileEntityCornerstone tileEntityCornerstone2 = (TileEntityCornerstone) worldIn.getTileEntity(connectedPos);
+                if (tileEntityCornerstone2 == null) continue;
+                tileEntityCornerstone2.setConnectedCornerstones(new BlockPos[4]);
+                tileEntityCornerstone2.setActivated(false);
+                ChunkPlotDataProvider.remove(connectedPos, worldIn.provider.getDimension());
+            }
+        } else {
             PlayerData.get(tileEntityCornerstone.getOwnerUUID(), worldIn.provider.getDimension()).removeCornerstone(pos);
         }
         worldIn.removeTileEntity(pos);

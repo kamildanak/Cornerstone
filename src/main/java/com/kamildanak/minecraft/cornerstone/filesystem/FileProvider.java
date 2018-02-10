@@ -1,7 +1,6 @@
 package com.kamildanak.minecraft.cornerstone.filesystem;
 
 import com.kamildanak.minecraft.cornerstone.Cornerstone;
-import com.kamildanak.minecraft.cornerstone.data.ClusterData;
 import com.kamildanak.minecraft.cornerstone.data.PlayerData;
 
 import java.io.File;
@@ -13,11 +12,9 @@ public class FileProvider {
         FileProvider.worldLocation = worldLocation;
     }
 
-    public static File getFile(ClusterData clusterData) {
-        File saveLocation = getSaveLocation(clusterData.dimension);
-        return new File(saveLocation, String.format("chunk_cluster-%d_%d.json",
-                clusterData.chunkClusterPosition.getX(),
-                clusterData.chunkClusterPosition.getY()));
+    public static File getFile(int dim, int x, int z) {
+        File saveLocation = getSaveLocation(dim);
+        return new File(saveLocation, String.format("chunk_cluster-%d_%d.json", x, z));
     }
 
 

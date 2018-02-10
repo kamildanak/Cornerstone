@@ -7,7 +7,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MessagePlayerData extends AbstractMessage.AbstractClientMessage<MessagePlayerData> {
@@ -22,11 +21,11 @@ public class MessagePlayerData extends AbstractMessage.AbstractClientMessage<Mes
     public MessagePlayerData(PlayerData playerData, int dim) {
         this.dim = dim;
         this.cornerstoneUnderConstruction = new ArrayList<>();
-        this.cornerstoneUnderConstruction = playerData.getCornerstoneUnderConstruction();
+        this.cornerstoneUnderConstruction.addAll(playerData.getCornerstoneUnderConstruction());
     }
 
     @Override
-    protected void read(PacketBuffer buffer) throws IOException {
+    protected void read(PacketBuffer buffer) {
         cornerstoneUnderConstruction = new ArrayList<>();
         dim = buffer.readInt();
         int size = buffer.readInt();
@@ -36,7 +35,7 @@ public class MessagePlayerData extends AbstractMessage.AbstractClientMessage<Mes
     }
 
     @Override
-    protected void write(PacketBuffer buffer) throws IOException {
+    protected void write(PacketBuffer buffer) {
         buffer.writeInt(dim);
         buffer.writeInt(cornerstoneUnderConstruction.size());
         for (BlockPos pos : cornerstoneUnderConstruction) {

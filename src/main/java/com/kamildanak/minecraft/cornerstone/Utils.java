@@ -1,5 +1,6 @@
 package com.kamildanak.minecraft.cornerstone;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.ISaveHandler;
@@ -25,5 +26,11 @@ public class Utils {
         int nx = (int) Math.floor(x / ((float) (16 * Cornerstone.settings.getChunkClusterSize())));
         int nz = (int) Math.floor(z / ((float) (16 * Cornerstone.settings.getChunkClusterSize())));
         return new Point2i(nx, nz);
+    }
+
+    public static void markBlockForUpdate(World world, BlockPos pos) {
+        if (world == null) return;
+        IBlockState blockState = world.getBlockState(pos);
+        world.notifyBlockUpdate(pos, blockState, blockState, 3);
     }
 }

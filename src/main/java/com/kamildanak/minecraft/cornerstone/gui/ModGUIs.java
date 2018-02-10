@@ -19,7 +19,19 @@ public class ModGUIs {
         }
     };
 
+    public static final GuiHandler CORNERSTONE_EDIT = new com.kamildanak.minecraft.foamflower.gui.GuiHandler("cornerstone-edit") {
+        @Override
+        public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+            return new DummyContainer();
+        }
+
+        @Override
+        public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+            return new GuiCornerstoneEdit(world, new BlockPos(x, y, z), player);
+        }
+    };
+
     public static final GuiHandler[] GUIS = {
-            CORNERSTONE_CREATE
+            CORNERSTONE_CREATE, CORNERSTONE_EDIT
     };
 }

@@ -3,6 +3,7 @@ package com.kamildanak.minecraft.cornerstone.events;
 import com.kamildanak.minecraft.cornerstone.Cornerstone;
 import com.kamildanak.minecraft.cornerstone.data.PlayerData;
 import com.kamildanak.minecraft.cornerstone.tileentity.TileEntityCornerstone;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;
@@ -16,14 +17,12 @@ import java.util.UUID;
 public class PlayerEventHandler {
     @SubscribeEvent
     public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        PlayerData playerData = PlayerData.get(event.player.getUniqueID(), event.toDim);
-        playerData.getCornerstoneUnderConstruction().removeIf(blockPos ->
-        {
-            TileEntity tileEntity = event.player.world.getTileEntity(blockPos);
-            return tileEntity instanceof TileEntityCornerstone &&
-                    ((TileEntityCornerstone) tileEntity).getOwnerUUID() == event.player.getUniqueID();
-        });
-        playerData.sendUpdateToPlayer();
+        checkIfCornerstonesExists(event.player, event.player.dimension);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        checkIfCornerstonesExists(event.player, event.player.dimension);
     }
 
     @SubscribeEvent
@@ -36,5 +35,16 @@ public class PlayerEventHandler {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void checkIfCornerstonesExists(EntityPlayer player, int toDim) {
+        PlayerData playerData = PlayerData.get(player.getUniqueID(), toDim);
+        playerData.getCornerstoneUnderConstruction().removeIf(blockPos ->
+        {
+            TileEntity tileEntity = player.world.getTileEntity(blockPos);
+            return tileEntity instanceof TileEntityCornerstone &&
+                    ((TileEntityCornerstone) tileEntity).getOwnerUUID() == player.getUniqueID();
+        });
+        playerData.sendUpdateToPlayer();
     }
 }

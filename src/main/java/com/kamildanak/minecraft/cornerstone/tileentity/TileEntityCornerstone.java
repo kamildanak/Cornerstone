@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public class TileEntityCornerstone extends TileEntity {
     private boolean activated;
+    private BlockPos[] connectedCornerstones;
     private String ownerName;
     private UUID ownerUUID;
 
@@ -20,6 +21,7 @@ public class TileEntityCornerstone extends TileEntity {
         activated = false;
         ownerName = "";
         ownerUUID = new UUID(0, 0);
+        connectedCornerstones = new BlockPos[4];
     }
 
     public TileEntityCornerstone(EntityPlayer entityPlayer) {
@@ -39,6 +41,10 @@ public class TileEntityCornerstone extends TileEntity {
         activated = nbttagcompound.getBoolean("activated");
         ownerName = nbttagcompound.getString("ownerName");
         ownerUUID = nbttagcompound.getUniqueId("ownerUUID");
+        for (int i = 0; i < 4; i++) {
+            long l = nbttagcompound.getLong("cornerstone" + i);
+            connectedCornerstones[i] = BlockPos.fromLong(l);
+        }
     }
 
     @Override
@@ -47,6 +53,10 @@ public class TileEntityCornerstone extends TileEntity {
         nbttagcompound.setBoolean("activated", activated);
         nbttagcompound.setString("ownerName", ownerName);
         nbttagcompound.setUniqueId("ownerUUID", ownerUUID);
+        for (int i = 0; i < 4; i++) {
+            if (connectedCornerstones[0] == null) continue;
+            nbttagcompound.setLong("cornerstone" + i, connectedCornerstones[0].toLong());
+        }
         return super.writeToNBT(nbttagcompound);
     }
 
@@ -92,5 +102,13 @@ public class TileEntityCornerstone extends TileEntity {
 
     public void setOwnerUUID(UUID ownerUUID) {
         this.ownerUUID = ownerUUID;
+    }
+
+    public BlockPos[] getConnectedCornerstones() {
+        return connectedCornerstones;
+    }
+
+    public void setConnectedCornerstones(BlockPos[] connectedCornerstones) {
+        this.connectedCornerstones = connectedCornerstones;
     }
 }
